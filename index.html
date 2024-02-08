@@ -1,0 +1,31 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <input id="msgInput" value="hello world">
+  <button id="writeBtn">Write to NFC</button>
+  <div id="output"></div>
+</body>
+<script>
+  const writeBtn=document.getElementById('writeBtn');
+  const output=document.getElementById('output');
+  const msgInput=document.getElementById('msgInput');
+  writeBtn.addEventListener("click",async ()=>{
+    if(!window.NDEFReader){
+      output.innerText="Sorry, you do not have NFC enabled on this browser.";
+      return;
+    }
+    output.innerHTML=`Sending message "${msgInput.value}" via NFC...`;
+    try{
+      const ndef = new NDEFReader();
+      await ndef.write(msgInput.value);
+      output.innerHTML+="<li>Message written.</li>";
+    }catch(err){
+      output.innerHTML+=`<p>Ran into an issue:<li>${err.stack}</li>`;
+    }
+  });
+</script>
+</html>
